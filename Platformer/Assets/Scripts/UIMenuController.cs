@@ -9,18 +9,20 @@ public class UIGameController : MonoBehaviour
     [SerializeField] private Text _lifes;
     [SerializeField] private Transform _player;
     [SerializeField] private AudioSource _music;
+    [SerializeField] private PlayerController _playerController;
 
     private float _scoreValue;
     private float _lifeValue;
+    private float _musicVolume;
 
     private bool _isPaused;
 
     private void Start()
     {
         _isPaused = false;
-
-        _scoreValue = 0;
-        _lifeValue = PlayerPrefs.GetFloat("Record", 0);
+        _musicVolume = _music.volume;
+        _scoreValue = _playerController.GetCoins(); 
+        _lifeValue = _playerController.GetHp();
 
         _score.text = _scoreValue.ToString();
         _lifes.text = _lifeValue.ToString();
@@ -28,7 +30,10 @@ public class UIGameController : MonoBehaviour
 
     private void Update()
     {
-
+        _scoreValue = _playerController.GetCoins();
+        _lifeValue = _playerController.GetHp();
+        _score.text = _scoreValue.ToString();
+        _lifes.text = _lifeValue.ToString();
 
         if (_isPaused)
         {
@@ -66,7 +71,7 @@ public class UIGameController : MonoBehaviour
     {
         if (state)
         {
-            _music.volume = 0.5f;
+            _music.volume = _musicVolume;
         }
         else
         {
