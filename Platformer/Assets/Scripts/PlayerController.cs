@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +12,10 @@ public class PlayerController : MonoBehaviour
     {
         _coins = 0;
         _hp = _maxHp;
+
+        _hp = PlayerPrefs.GetFloat("HP", _hp);
+        _coins = PlayerPrefs.GetFloat("Coins", _coins);
+        PlayerPrefs.SetInt("Level", SceneManager.GetActiveScene().buildIndex);
     }
 
     public float GetHp()
@@ -24,11 +30,23 @@ public class PlayerController : MonoBehaviour
     public void AddCoin()
     {
         _coins++;
+        PlayerPrefs.SetFloat("Coins", _coins);
     }
 
     public void GetDamage(float damage)
     {
         _hp -= damage;
+        PlayerPrefs.SetFloat("HP", _hp);
     }
 
+    private void OnDisable()
+    {
+        PlayerPrefs.Save();
+    }
+
+    private void OnEnable()
+    {
+        _hp = PlayerPrefs.GetFloat("HP", _hp);
+        _coins = PlayerPrefs.GetFloat("Coins", _coins);
+    }
 }
